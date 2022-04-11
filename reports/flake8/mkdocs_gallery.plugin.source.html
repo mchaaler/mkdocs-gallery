@@ -1094,10 +1094,10 @@
                class="code sev- "><tt><i>350</i>                 <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">excluded_dirs</span><span class="p">:</span></tt>
             </div>
             <div id="l351"
-               class="code sev- "><tt><i>351</i>                     <span class="c1"># TODO maybe use fnmatch rather ?</span></tt>
+               class="code sev- "><tt><i>351</i>                     <span class="k">try</span><span class="p">:</span></tt>
             </div>
             <div id="l352"
-               class="code sev- "><tt><i>352</i>                     <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">src_path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">g</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>352</i>                         <span class="n">Path</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">src_path</span><span class="p">)</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">g</span><span class="p">)</span></tt>
             </div>
             <div id="l353"
                class="code sev- "><tt><i>353</i>                         <span class="c1"># ignore this event: the file is in the gallery target dir.</span></tt>
@@ -1109,322 +1109,328 @@
                class="code sev- "><tt><i>355</i>                         <span class="k">return</span></tt>
             </div>
             <div id="l356"
-               class="code sev- "><tt><i>356</i>                 <span class="k">return</span> <span class="n">original_callback</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></tt>
+               class="code sev- "><tt><i>356</i>                     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span></tt>
             </div>
             <div id="l357"
-               class="code sev- "><tt><i>357</i>             <span class="k">return</span> <span class="n">_callback</span></tt>
+               class="code sev- "><tt><i>357</i>                         <span class="k">pass</span></tt>
             </div>
             <div id="l358"
-               class="code sev- "><tt><i>358</i> &nbsp;</tt>
+               class="code sev- "><tt><i>358</i>                 <span class="k">return</span> <span class="n">original_callback</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></tt>
             </div>
             <div id="l359"
-               class="code sev- "><tt><i>359</i>         <span class="c1"># TODO this is an ugly hack...</span></tt>
+               class="code sev- "><tt><i>359</i>             <span class="k">return</span> <span class="n">_callback</span></tt>
             </div>
             <div id="l360"
-               class="code sev- "><tt><i>360</i>         <span class="c1"># Find the objects in charge of monitoring the dirs and modify their callbacks</span></tt>
+               class="code sev- "><tt><i>360</i> &nbsp;</tt>
             </div>
             <div id="l361"
-               class="code sev- "><tt><i>361</i>         <span class="k">for</span> <span class="n">_watch</span><span class="p">,</span> <span class="n">handlers</span> <span class="ow">in</span> <span class="n">server</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">_handlers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span></tt>
+               class="code sev- "><tt><i>361</i>         <span class="c1"># TODO this is an ugly hack...</span></tt>
             </div>
             <div id="l362"
-               class="code sev- "><tt><i>362</i>             <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">handlers</span><span class="p">:</span></tt>
+               class="code sev- "><tt><i>362</i>         <span class="c1"># Find the objects in charge of monitoring the dirs and modify their callbacks</span></tt>
             </div>
             <div id="l363"
-               class="code sev- "><tt><i>363</i>                 <span class="n">h</span><span class="o">.</span><span class="n">on_any_event</span> <span class="o">=</span> <span class="n">wrap_callback</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">on_any_event</span><span class="p">)</span></tt>
+               class="code sev- "><tt><i>363</i>         <span class="k">for</span> <span class="n">_watch</span><span class="p">,</span> <span class="n">handlers</span> <span class="ow">in</span> <span class="n">server</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">_handlers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span></tt>
             </div>
             <div id="l364"
-               class="code sev- "><tt><i>364</i> &nbsp;</tt>
+               class="code sev- "><tt><i>364</i>             <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">handlers</span><span class="p">:</span></tt>
             </div>
             <div id="l365"
-               class="code sev- "><tt><i>365</i>         <span class="k">return</span> <span class="n">server</span></tt>
+               class="code sev- "><tt><i>365</i>                 <span class="n">h</span><span class="o">.</span><span class="n">on_any_event</span> <span class="o">=</span> <span class="n">wrap_callback</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">on_any_event</span><span class="p">)</span></tt>
             </div>
             <div id="l366"
                class="code sev- "><tt><i>366</i> &nbsp;</tt>
             </div>
             <div id="l367"
-               class="code sev- "><tt><i>367</i>     <span class="k">def</span> <span class="nf">on_post_build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>367</i>         <span class="k">return</span> <span class="n">server</span></tt>
             </div>
             <div id="l368"
-               class="code sev- "><tt><i>368</i>         <span class="sd">&quot;&quot;&quot;Create one md file for each python example in the gallery.&quot;&quot;&quot;</span></tt>
+               class="code sev- "><tt><i>368</i> &nbsp;</tt>
             </div>
             <div id="l369"
-               class="code sev- "><tt><i>369</i> &nbsp;</tt>
+               class="code sev- "><tt><i>369</i>     <span class="k">def</span> <span class="nf">on_post_build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
             </div>
             <div id="l370"
-               class="code sev- "><tt><i>370</i>         <span class="n">copy_binder_files</span><span class="p">(</span><span class="n">gallery_conf</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">mkdocs_conf</span><span class="o">=</span><span class="n">config</span><span class="p">)</span></tt>
+               class="code sev- "><tt><i>370</i>         <span class="sd">&quot;&quot;&quot;Create one md file for each python example in the gallery.&quot;&quot;&quot;</span></tt>
             </div>
             <div id="l371"
-               class="code sev- "><tt><i>371</i>         <span class="n">summarize_failing_examples</span><span class="p">(</span><span class="n">gallery_conf</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">mkdocs_conf</span><span class="o">=</span><span class="n">config</span><span class="p">)</span></tt>
+               class="code sev- "><tt><i>371</i> &nbsp;</tt>
             </div>
             <div id="l372"
-               class="code sev- "><tt><i>372</i>         <span class="c1"># TODO embed_code_links()</span></tt>
+               class="code sev- "><tt><i>372</i>         <span class="n">copy_binder_files</span><span class="p">(</span><span class="n">gallery_conf</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">mkdocs_conf</span><span class="o">=</span><span class="n">config</span><span class="p">)</span></tt>
             </div>
             <div id="l373"
-               class="code sev- "><tt><i>373</i> &nbsp;</tt>
+               class="code sev- "><tt><i>373</i>         <span class="n">summarize_failing_examples</span><span class="p">(</span><span class="n">gallery_conf</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">mkdocs_conf</span><span class="o">=</span><span class="n">config</span><span class="p">)</span></tt>
             </div>
             <div id="l374"
-               class="code sev- "><tt><i>374</i> &nbsp;</tt>
+               class="code sev- "><tt><i>374</i>         <span class="c1"># TODO embed_code_links()</span></tt>
             </div>
             <div id="l375"
-               class="code sev- "><tt><i>375</i> <span class="k">def</span> <span class="nf">merge_extra_config</span><span class="p">(</span><span class="n">extra_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">config</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>375</i> &nbsp;</tt>
             </div>
             <div id="l376"
-               class="code sev- "><tt><i>376</i>     <span class="sd">&quot;&quot;&quot;Extend the configuration &#39;markdown_extensions&#39; list with extension_name if needed.&quot;&quot;&quot;</span></tt>
+               class="code sev- "><tt><i>376</i> &nbsp;</tt>
             </div>
             <div id="l377"
-               class="code sev- "><tt><i>377</i> &nbsp;</tt>
+               class="code sev- "><tt><i>377</i> <span class="k">def</span> <span class="nf">merge_extra_config</span><span class="p">(</span><span class="n">extra_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">config</span><span class="p">):</span></tt>
             </div>
             <div id="l378"
-               class="code sev- "><tt><i>378</i>     <span class="k">for</span> <span class="n">extension_cfg</span> <span class="ow">in</span> <span class="n">extra_config</span><span class="p">[</span><span class="s2">&quot;markdown_extensions&quot;</span><span class="p">]:</span></tt>
+               class="code sev- "><tt><i>378</i>     <span class="sd">&quot;&quot;&quot;Extend the configuration &#39;markdown_extensions&#39; list with extension_name if needed.&quot;&quot;&quot;</span></tt>
             </div>
             <div id="l379"
-               class="code sev- "><tt><i>379</i>         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">extension_cfg</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>379</i> &nbsp;</tt>
             </div>
             <div id="l380"
-               class="code sev- "><tt><i>380</i>             <span class="n">extension_name</span> <span class="o">=</span> <span class="n">extension_cfg</span></tt>
+               class="code sev- "><tt><i>380</i>     <span class="k">for</span> <span class="n">extension_cfg</span> <span class="ow">in</span> <span class="n">extra_config</span><span class="p">[</span><span class="s2">&quot;markdown_extensions&quot;</span><span class="p">]:</span></tt>
             </div>
             <div id="l381"
-               class="code sev- "><tt><i>381</i>             <span class="k">if</span> <span class="n">extension_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;markdown_extensions&#39;</span><span class="p">]:</span></tt>
+               class="code sev- "><tt><i>381</i>         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">extension_cfg</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span></tt>
             </div>
             <div id="l382"
-               class="code sev- "><tt><i>382</i>                 <span class="n">config</span><span class="p">[</span><span class="s1">&#39;markdown_extensions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">extension_name</span><span class="p">)</span></tt>
+               class="code sev- "><tt><i>382</i>             <span class="n">extension_name</span> <span class="o">=</span> <span class="n">extension_cfg</span></tt>
             </div>
             <div id="l383"
-               class="code sev- "><tt><i>383</i>         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">extension_cfg</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>383</i>             <span class="k">if</span> <span class="n">extension_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;markdown_extensions&#39;</span><span class="p">]:</span></tt>
             </div>
             <div id="l384"
-               class="code sev- "><tt><i>384</i>             <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">extension_cfg</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>  <span class="c1"># noqa</span></tt>
+               class="code sev- "><tt><i>384</i>                 <span class="n">config</span><span class="p">[</span><span class="s1">&#39;markdown_extensions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">extension_name</span><span class="p">)</span></tt>
             </div>
             <div id="l385"
-               class="code sev- "><tt><i>385</i>             <span class="n">extension_name</span><span class="p">,</span> <span class="n">extension_options</span> <span class="o">=</span> <span class="n">extension_cfg</span><span class="o">.</span><span class="n">popitem</span><span class="p">()</span></tt>
+               class="code sev- "><tt><i>385</i>         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">extension_cfg</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span></tt>
             </div>
             <div id="l386"
-               class="code sev- "><tt><i>386</i>             <span class="k">if</span> <span class="n">extension_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;markdown_extensions&#39;</span><span class="p">]:</span></tt>
+               class="code sev- "><tt><i>386</i>             <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">extension_cfg</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>  <span class="c1"># noqa</span></tt>
             </div>
             <div id="l387"
-               class="code sev- "><tt><i>387</i>                 <span class="n">config</span><span class="p">[</span><span class="s1">&#39;markdown_extensions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">extension_name</span><span class="p">)</span></tt>
+               class="code sev- "><tt><i>387</i>             <span class="n">extension_name</span><span class="p">,</span> <span class="n">extension_options</span> <span class="o">=</span> <span class="n">extension_cfg</span><span class="o">.</span><span class="n">popitem</span><span class="p">()</span></tt>
             </div>
             <div id="l388"
-               class="code sev- "><tt><i>388</i>             <span class="k">if</span> <span class="n">extension_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;mdx_configs&#39;</span><span class="p">]:</span></tt>
+               class="code sev- "><tt><i>388</i>             <span class="k">if</span> <span class="n">extension_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;markdown_extensions&#39;</span><span class="p">]:</span></tt>
             </div>
             <div id="l389"
-               class="code sev- "><tt><i>389</i>                 <span class="n">config</span><span class="p">[</span><span class="s1">&#39;mdx_configs&#39;</span><span class="p">][</span><span class="n">extension_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">extension_options</span></tt>
+               class="code sev- "><tt><i>389</i>                 <span class="n">config</span><span class="p">[</span><span class="s1">&#39;markdown_extensions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">extension_name</span><span class="p">)</span></tt>
             </div>
             <div id="l390"
-               class="code sev- "><tt><i>390</i>             <span class="k">else</span><span class="p">:</span></tt>
+               class="code sev- "><tt><i>390</i>             <span class="k">if</span> <span class="n">extension_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;mdx_configs&#39;</span><span class="p">]:</span></tt>
             </div>
             <div id="l391"
-               class="code sev- "><tt><i>391</i>                 <span class="c1"># Only add options that are not already set</span></tt>
+               class="code sev- "><tt><i>391</i>                 <span class="n">config</span><span class="p">[</span><span class="s1">&#39;mdx_configs&#39;</span><span class="p">][</span><span class="n">extension_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">extension_options</span></tt>
             </div>
             <div id="l392"
-               class="code sev- "><tt><i>392</i>                 <span class="c1"># TODO should we warn ?</span></tt>
+               class="code sev- "><tt><i>392</i>             <span class="k">else</span><span class="p">:</span></tt>
             </div>
             <div id="l393"
-               class="code sev- "><tt><i>393</i>                 <span class="k">for</span> <span class="n">cfg_key</span><span class="p">,</span> <span class="n">cfg_val</span> <span class="ow">in</span> <span class="n">extension_options</span><span class="o">.</span><span class="n">items</span><span class="p">():</span></tt>
+               class="code sev- "><tt><i>393</i>                 <span class="c1"># Only add options that are not already set</span></tt>
             </div>
             <div id="l394"
-               class="code sev- "><tt><i>394</i>                     <span class="k">if</span> <span class="n">cfg_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;mdx_configs&#39;</span><span class="p">][</span><span class="n">extension_name</span><span class="p">]:</span></tt>
+               class="code sev- "><tt><i>394</i>                 <span class="c1"># TODO should we warn ?</span></tt>
             </div>
             <div id="l395"
-               class="code sev- "><tt><i>395</i>                         <span class="n">config</span><span class="p">[</span><span class="s1">&#39;mdx_configs&#39;</span><span class="p">][</span><span class="n">extension_name</span><span class="p">][</span><span class="n">cfg_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">cfg_val</span></tt>
+               class="code sev- "><tt><i>395</i>                 <span class="k">for</span> <span class="n">cfg_key</span><span class="p">,</span> <span class="n">cfg_val</span> <span class="ow">in</span> <span class="n">extension_options</span><span class="o">.</span><span class="n">items</span><span class="p">():</span></tt>
             </div>
             <div id="l396"
-               class="code sev- "><tt><i>396</i>         <span class="k">else</span><span class="p">:</span></tt>
+               class="code sev- "><tt><i>396</i>                     <span class="k">if</span> <span class="n">cfg_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;mdx_configs&#39;</span><span class="p">][</span><span class="n">extension_name</span><span class="p">]:</span></tt>
             </div>
             <div id="l397"
-               class="code sev- "><tt><i>397</i>             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">extension_cfg</span><span class="p">)</span></tt>
+               class="code sev- "><tt><i>397</i>                         <span class="n">config</span><span class="p">[</span><span class="s1">&#39;mdx_configs&#39;</span><span class="p">][</span><span class="n">extension_name</span><span class="p">][</span><span class="n">cfg_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">cfg_val</span></tt>
             </div>
             <div id="l398"
-               class="code sev- "><tt><i>398</i> &nbsp;</tt>
+               class="code sev- "><tt><i>398</i>         <span class="k">else</span><span class="p">:</span></tt>
             </div>
             <div id="l399"
-               class="code sev- "><tt><i>399</i> &nbsp;</tt>
+               class="code sev- "><tt><i>399</i>             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">extension_cfg</span><span class="p">)</span></tt>
             </div>
             <div id="l400"
-               class="code sev- "><tt><i>400</i> <span class="c1"># class SearchPlugin(BasePlugin):</span></tt>
+               class="code sev- "><tt><i>400</i> &nbsp;</tt>
             </div>
             <div id="l401"
-               class="code sev- "><tt><i>401</i> <span class="c1">#     &quot;&quot;&quot; Add a search feature to MkDocs. &quot;&quot;&quot;</span></tt>
+               class="code sev- "><tt><i>401</i> &nbsp;</tt>
             </div>
             <div id="l402"
-               class="code sev- "><tt><i>402</i> <span class="c1">#</span></tt>
+               class="code sev- "><tt><i>402</i> <span class="c1"># class SearchPlugin(BasePlugin):</span></tt>
             </div>
             <div id="l403"
-               class="code sev- "><tt><i>403</i> <span class="c1">#     config_scheme = (</span></tt>
+               class="code sev- "><tt><i>403</i> <span class="c1">#     &quot;&quot;&quot; Add a search feature to MkDocs. &quot;&quot;&quot;</span></tt>
             </div>
             <div id="l404"
-               class="code sev- "><tt><i>404</i> <span class="c1">#         (&#39;lang&#39;, LangOption()),</span></tt>
+               class="code sev- "><tt><i>404</i> <span class="c1">#</span></tt>
             </div>
             <div id="l405"
-               class="code sev- "><tt><i>405</i> <span class="c1">#         (&#39;separator&#39;, co.Type(str, default=r&#39;[\s\-]+&#39;)),</span></tt>
+               class="code sev- "><tt><i>405</i> <span class="c1">#     config_scheme = (</span></tt>
             </div>
             <div id="l406"
-               class="code sev- "><tt><i>406</i> <span class="c1">#         (&#39;min_search_length&#39;, co.Type(int, default=3)),</span></tt>
+               class="code sev- "><tt><i>406</i> <span class="c1">#         (&#39;lang&#39;, LangOption()),</span></tt>
             </div>
             <div id="l407"
-               class="code sev- "><tt><i>407</i> <span class="c1">#         (&#39;prebuild_index&#39;, co.Choice((False, True, &#39;node&#39;, &#39;python&#39;), default=False)),</span></tt>
+               class="code sev- "><tt><i>407</i> <span class="c1">#         (&#39;separator&#39;, co.Type(str, default=r&#39;[\s\-]+&#39;)),</span></tt>
             </div>
             <div id="l408"
-               class="code sev- "><tt><i>408</i> <span class="c1">#         (&#39;indexing&#39;, co.Choice((&#39;full&#39;, &#39;sections&#39;, &#39;titles&#39;), default=&#39;full&#39;))</span></tt>
+               class="code sev- "><tt><i>408</i> <span class="c1">#         (&#39;min_search_length&#39;, co.Type(int, default=3)),</span></tt>
             </div>
             <div id="l409"
-               class="code sev- "><tt><i>409</i> <span class="c1">#     )</span></tt>
+               class="code sev- "><tt><i>409</i> <span class="c1">#         (&#39;prebuild_index&#39;, co.Choice((False, True, &#39;node&#39;, &#39;python&#39;), default=False)),</span></tt>
             </div>
             <div id="l410"
-               class="code sev- "><tt><i>410</i> <span class="c1">#</span></tt>
+               class="code sev- "><tt><i>410</i> <span class="c1">#         (&#39;indexing&#39;, co.Choice((&#39;full&#39;, &#39;sections&#39;, &#39;titles&#39;), default=&#39;full&#39;))</span></tt>
             </div>
             <div id="l411"
-               class="code sev- "><tt><i>411</i> <span class="c1">#     def on_config(self, config, **kwargs):</span></tt>
+               class="code sev- "><tt><i>411</i> <span class="c1">#     )</span></tt>
             </div>
             <div id="l412"
-               class="code sev- "><tt><i>412</i> <span class="c1">#         &quot;Add plugin templates and scripts to config.&quot;</span></tt>
+               class="code sev- "><tt><i>412</i> <span class="c1">#</span></tt>
             </div>
             <div id="l413"
-               class="code sev- "><tt><i>413</i> <span class="c1">#         if &#39;include_search_page&#39; in config[&#39;theme&#39;] and config[&#39;theme&#39;][&#39;include_search_page&#39;]:</span></tt>
+               class="code sev- "><tt><i>413</i> <span class="c1">#     def on_config(self, config, **kwargs):</span></tt>
             </div>
             <div id="l414"
-               class="code sev- "><tt><i>414</i> <span class="c1">#             config[&#39;theme&#39;].static_templates.add(&#39;search.html&#39;)</span></tt>
+               class="code sev- "><tt><i>414</i> <span class="c1">#         &quot;Add plugin templates and scripts to config.&quot;</span></tt>
             </div>
             <div id="l415"
-               class="code sev- "><tt><i>415</i> <span class="c1">#         if not (&#39;search_index_only&#39; in config[&#39;theme&#39;] and config[&#39;theme&#39;][&#39;search_index_only&#39;]):</span></tt>
+               class="code sev- "><tt><i>415</i> <span class="c1">#         if &#39;include_search_page&#39; in config[&#39;theme&#39;] and config[&#39;theme&#39;][&#39;include_search_page&#39;]:</span></tt>
             </div>
             <div id="l416"
-               class="code sev- "><tt><i>416</i> <span class="c1">#             path = os.path.join(base_path, &#39;templates&#39;)</span></tt>
+               class="code sev- "><tt><i>416</i> <span class="c1">#             config[&#39;theme&#39;].static_templates.add(&#39;search.html&#39;)</span></tt>
             </div>
             <div id="l417"
-               class="code sev- "><tt><i>417</i> <span class="c1">#             config[&#39;theme&#39;].dirs.append(path)</span></tt>
+               class="code sev- "><tt><i>417</i> <span class="c1">#         if not (&#39;search_index_only&#39; in config[&#39;theme&#39;] and config[&#39;theme&#39;][&#39;search_index_only&#39;]):</span></tt>
             </div>
             <div id="l418"
-               class="code sev- "><tt><i>418</i> <span class="c1">#             if &#39;search/main.js&#39; not in config[&#39;extra_javascript&#39;]:</span></tt>
+               class="code sev- "><tt><i>418</i> <span class="c1">#             path = os.path.join(base_path, &#39;templates&#39;)</span></tt>
             </div>
             <div id="l419"
-               class="code sev- "><tt><i>419</i> <span class="c1">#                 config[&#39;extra_javascript&#39;].append(&#39;search/main.js&#39;)</span></tt>
+               class="code sev- "><tt><i>419</i> <span class="c1">#             config[&#39;theme&#39;].dirs.append(path)</span></tt>
             </div>
             <div id="l420"
-               class="code sev- "><tt><i>420</i> <span class="c1">#         if self.config[&#39;lang&#39;] is None:</span></tt>
+               class="code sev- "><tt><i>420</i> <span class="c1">#             if &#39;search/main.js&#39; not in config[&#39;extra_javascript&#39;]:</span></tt>
             </div>
             <div id="l421"
-               class="code sev- "><tt><i>421</i> <span class="c1">#             # lang setting undefined. Set default based on theme locale</span></tt>
+               class="code sev- "><tt><i>421</i> <span class="c1">#                 config[&#39;extra_javascript&#39;].append(&#39;search/main.js&#39;)</span></tt>
             </div>
             <div id="l422"
-               class="code sev- "><tt><i>422</i> <span class="c1">#             validate = self.config_scheme[0][1].run_validation</span></tt>
+               class="code sev- "><tt><i>422</i> <span class="c1">#         if self.config[&#39;lang&#39;] is None:</span></tt>
             </div>
             <div id="l423"
-               class="code sev- "><tt><i>423</i> <span class="c1">#             self.config[&#39;lang&#39;] = validate(config[&#39;theme&#39;][&#39;locale&#39;].language)</span></tt>
+               class="code sev- "><tt><i>423</i> <span class="c1">#             # lang setting undefined. Set default based on theme locale</span></tt>
             </div>
             <div id="l424"
-               class="code sev- "><tt><i>424</i> <span class="c1">#         # The `python` method of `prebuild_index` is pending deprecation as of version 1.2.</span></tt>
+               class="code sev- "><tt><i>424</i> <span class="c1">#             validate = self.config_scheme[0][1].run_validation</span></tt>
             </div>
             <div id="l425"
-               class="code sev- "><tt><i>425</i> <span class="c1">#         # TODO: Raise a deprecation warning in a future release (1.3?).</span></tt>
+               class="code sev- "><tt><i>425</i> <span class="c1">#             self.config[&#39;lang&#39;] = validate(config[&#39;theme&#39;][&#39;locale&#39;].language)</span></tt>
             </div>
             <div id="l426"
-               class="code sev- "><tt><i>426</i> <span class="c1">#         if self.config[&#39;prebuild_index&#39;] == &#39;python&#39;:</span></tt>
+               class="code sev- "><tt><i>426</i> <span class="c1">#         # The `python` method of `prebuild_index` is pending deprecation as of version 1.2.</span></tt>
             </div>
             <div id="l427"
-               class="code sev- "><tt><i>427</i> <span class="c1">#             log.info(</span></tt>
+               class="code sev- "><tt><i>427</i> <span class="c1">#         # TODO: Raise a deprecation warning in a future release (1.3?).</span></tt>
             </div>
             <div id="l428"
-               class="code sev- "><tt><i>428</i> <span class="c1">#                 &quot;The &#39;python&#39; method of the search plugin&#39;s &#39;prebuild_index&#39; config option &quot;</span></tt>
+               class="code sev- "><tt><i>428</i> <span class="c1">#         if self.config[&#39;prebuild_index&#39;] == &#39;python&#39;:</span></tt>
             </div>
             <div id="l429"
-               class="code sev- "><tt><i>429</i> <span class="c1">#                 &quot;is pending deprecation and will not be supported in a future release.&quot;</span></tt>
+               class="code sev- "><tt><i>429</i> <span class="c1">#             log.info(</span></tt>
             </div>
             <div id="l430"
-               class="code sev- "><tt><i>430</i> <span class="c1">#             )</span></tt>
+               class="code sev- "><tt><i>430</i> <span class="c1">#                 &quot;The &#39;python&#39; method of the search plugin&#39;s &#39;prebuild_index&#39; config option &quot;</span></tt>
             </div>
             <div id="l431"
-               class="code sev- "><tt><i>431</i> <span class="c1">#         return config</span></tt>
+               class="code sev- "><tt><i>431</i> <span class="c1">#                 &quot;is pending deprecation and will not be supported in a future release.&quot;</span></tt>
             </div>
             <div id="l432"
-               class="code sev- "><tt><i>432</i> <span class="c1">#</span></tt>
+               class="code sev- "><tt><i>432</i> <span class="c1">#             )</span></tt>
             </div>
             <div id="l433"
-               class="code sev- "><tt><i>433</i> <span class="c1">#     def on_page_context(self, context, **kwargs):</span></tt>
+               class="code sev- "><tt><i>433</i> <span class="c1">#         return config</span></tt>
             </div>
             <div id="l434"
-               class="code sev- "><tt><i>434</i> <span class="c1">#         &quot;Add page to search index.&quot;</span></tt>
+               class="code sev- "><tt><i>434</i> <span class="c1">#</span></tt>
             </div>
             <div id="l435"
-               class="code sev- "><tt><i>435</i> <span class="c1">#         self.search_index.add_entry_from_context(context[&#39;page&#39;])</span></tt>
+               class="code sev- "><tt><i>435</i> <span class="c1">#     def on_page_context(self, context, **kwargs):</span></tt>
             </div>
             <div id="l436"
-               class="code sev- "><tt><i>436</i> <span class="c1">#</span></tt>
+               class="code sev- "><tt><i>436</i> <span class="c1">#         &quot;Add page to search index.&quot;</span></tt>
             </div>
             <div id="l437"
-               class="code sev- "><tt><i>437</i> <span class="c1">#     def on_post_build(self, config, **kwargs):</span></tt>
+               class="code sev- "><tt><i>437</i> <span class="c1">#         self.search_index.add_entry_from_context(context[&#39;page&#39;])</span></tt>
             </div>
             <div id="l438"
-               class="code sev- "><tt><i>438</i> <span class="c1">#         &quot;Build search index.&quot;</span></tt>
+               class="code sev- "><tt><i>438</i> <span class="c1">#</span></tt>
             </div>
             <div id="l439"
-               class="code sev- "><tt><i>439</i> <span class="c1">#         output_base_path = os.path.join(config[&#39;site_dir&#39;], &#39;search&#39;)</span></tt>
+               class="code sev- "><tt><i>439</i> <span class="c1">#     def on_post_build(self, config, **kwargs):</span></tt>
             </div>
             <div id="l440"
-               class="code sev- "><tt><i>440</i> <span class="c1">#         search_index = self.search_index.generate_search_index()</span></tt>
+               class="code sev- "><tt><i>440</i> <span class="c1">#         &quot;Build search index.&quot;</span></tt>
             </div>
             <div id="l441"
-               class="code sev- "><tt><i>441</i> <span class="c1">#         json_output_path = os.path.join(output_base_path, &#39;search_index.json&#39;)</span></tt>
+               class="code sev- "><tt><i>441</i> <span class="c1">#         output_base_path = os.path.join(config[&#39;site_dir&#39;], &#39;search&#39;)</span></tt>
             </div>
             <div id="l442"
-               class="code sev- "><tt><i>442</i> <span class="c1">#         utils.write_file(search_index.encode(&#39;utf-8&#39;), json_output_path)</span></tt>
+               class="code sev- "><tt><i>442</i> <span class="c1">#         search_index = self.search_index.generate_search_index()</span></tt>
             </div>
             <div id="l443"
-               class="code sev- "><tt><i>443</i> <span class="c1">#</span></tt>
+               class="code sev- "><tt><i>443</i> <span class="c1">#         json_output_path = os.path.join(output_base_path, &#39;search_index.json&#39;)</span></tt>
             </div>
             <div id="l444"
-               class="code sev- "><tt><i>444</i> <span class="c1">#         if not (&#39;search_index_only&#39; in config[&#39;theme&#39;] and config[&#39;theme&#39;][&#39;search_index_only&#39;]):</span></tt>
+               class="code sev- "><tt><i>444</i> <span class="c1">#         utils.write_file(search_index.encode(&#39;utf-8&#39;), json_output_path)</span></tt>
             </div>
             <div id="l445"
-               class="code sev- "><tt><i>445</i> <span class="c1">#             # Include language support files in output. Copy them directly</span></tt>
+               class="code sev- "><tt><i>445</i> <span class="c1">#</span></tt>
             </div>
             <div id="l446"
-               class="code sev- "><tt><i>446</i> <span class="c1">#             # so that only the needed files are included.</span></tt>
+               class="code sev- "><tt><i>446</i> <span class="c1">#         if not (&#39;search_index_only&#39; in config[&#39;theme&#39;] and config[&#39;theme&#39;][&#39;search_index_only&#39;]):</span></tt>
             </div>
             <div id="l447"
-               class="code sev- "><tt><i>447</i> <span class="c1">#             files = []</span></tt>
+               class="code sev- "><tt><i>447</i> <span class="c1">#             # Include language support files in output. Copy them directly</span></tt>
             </div>
             <div id="l448"
-               class="code sev- "><tt><i>448</i> <span class="c1">#             if len(self.config[&#39;lang&#39;]) &gt; 1 or &#39;en&#39; not in self.config[&#39;lang&#39;]:</span></tt>
+               class="code sev- "><tt><i>448</i> <span class="c1">#             # so that only the needed files are included.</span></tt>
             </div>
             <div id="l449"
-               class="code sev- "><tt><i>449</i> <span class="c1">#                 files.append(&#39;lunr.stemmer.support.js&#39;)</span></tt>
+               class="code sev- "><tt><i>449</i> <span class="c1">#             files = []</span></tt>
             </div>
             <div id="l450"
-               class="code sev- "><tt><i>450</i> <span class="c1">#             if len(self.config[&#39;lang&#39;]) &gt; 1:</span></tt>
+               class="code sev- "><tt><i>450</i> <span class="c1">#             if len(self.config[&#39;lang&#39;]) &gt; 1 or &#39;en&#39; not in self.config[&#39;lang&#39;]:</span></tt>
             </div>
             <div id="l451"
-               class="code sev- "><tt><i>451</i> <span class="c1">#                 files.append(&#39;lunr.multi.js&#39;)</span></tt>
+               class="code sev- "><tt><i>451</i> <span class="c1">#                 files.append(&#39;lunr.stemmer.support.js&#39;)</span></tt>
             </div>
             <div id="l452"
-               class="code sev- "><tt><i>452</i> <span class="c1">#             if (&#39;ja&#39; in self.config[&#39;lang&#39;] or &#39;jp&#39; in self.config[&#39;lang&#39;]):</span></tt>
+               class="code sev- "><tt><i>452</i> <span class="c1">#             if len(self.config[&#39;lang&#39;]) &gt; 1:</span></tt>
             </div>
             <div id="l453"
-               class="code sev- "><tt><i>453</i> <span class="c1">#                 files.append(&#39;tinyseg.js&#39;)</span></tt>
+               class="code sev- "><tt><i>453</i> <span class="c1">#                 files.append(&#39;lunr.multi.js&#39;)</span></tt>
             </div>
             <div id="l454"
-               class="code sev- "><tt><i>454</i> <span class="c1">#             for lang in self.config[&#39;lang&#39;]:</span></tt>
+               class="code sev- "><tt><i>454</i> <span class="c1">#             if (&#39;ja&#39; in self.config[&#39;lang&#39;] or &#39;jp&#39; in self.config[&#39;lang&#39;]):</span></tt>
             </div>
             <div id="l455"
-               class="code sev- "><tt><i>455</i> <span class="c1">#                 if (lang != &#39;en&#39;):</span></tt>
+               class="code sev- "><tt><i>455</i> <span class="c1">#                 files.append(&#39;tinyseg.js&#39;)</span></tt>
             </div>
             <div id="l456"
-               class="code sev- "><tt><i>456</i> <span class="c1">#                     files.append(f&#39;lunr.{lang}.js&#39;)</span></tt>
+               class="code sev- "><tt><i>456</i> <span class="c1">#             for lang in self.config[&#39;lang&#39;]:</span></tt>
             </div>
             <div id="l457"
-               class="code sev- "><tt><i>457</i> <span class="c1">#</span></tt>
+               class="code sev- "><tt><i>457</i> <span class="c1">#                 if (lang != &#39;en&#39;):</span></tt>
             </div>
             <div id="l458"
-               class="code sev- "><tt><i>458</i> <span class="c1">#             for filename in files:</span></tt>
+               class="code sev- "><tt><i>458</i> <span class="c1">#                     files.append(f&#39;lunr.{lang}.js&#39;)</span></tt>
             </div>
             <div id="l459"
-               class="code sev- "><tt><i>459</i> <span class="c1">#                 from_path = os.path.join(base_path, &#39;lunr-language&#39;, filename)</span></tt>
+               class="code sev- "><tt><i>459</i> <span class="c1">#</span></tt>
             </div>
             <div id="l460"
-               class="code sev- "><tt><i>460</i> <span class="c1">#                 to_path = os.path.join(output_base_path, filename)</span></tt>
+               class="code sev- "><tt><i>460</i> <span class="c1">#             for filename in files:</span></tt>
             </div>
             <div id="l461"
-               class="code sev- "><tt><i>461</i> <span class="c1">#                 utils.copy_file(from_path, to_path)</span></tt>
+               class="code sev- "><tt><i>461</i> <span class="c1">#                 from_path = os.path.join(base_path, &#39;lunr-language&#39;, filename)</span></tt>
+            </div>
+            <div id="l462"
+               class="code sev- "><tt><i>462</i> <span class="c1">#                 to_path = os.path.join(output_base_path, filename)</span></tt>
+            </div>
+            <div id="l463"
+               class="code sev- "><tt><i>463</i> <span class="c1">#                 utils.copy_file(from_path, to_path)</span></tt>
             </div>
             
          </div>
