@@ -14,10 +14,10 @@ from typing import List, Dict, Tuple, Union
 from pathlib import Path
 
 import ast
-from distutils.version import LooseVersion
+from packaging.version import Version, parse
 from io import BytesIO
 import re
-import sys
+import platform
 import tokenize
 from textwrap import dedent
 
@@ -112,7 +112,7 @@ def _get_docstring_and_rest(file: Path):
             'A docstring is required by mkdocs-gallery '
             'unless the file is ignored by "ignore_pattern"')
 
-    if LooseVersion(sys.version) >= LooseVersion('3.7'):
+    if parse(platform.python_version()) >= Version('3.7'):
         docstring = ast.get_docstring(node)
         assert docstring is not None  # noqa  # should be guaranteed above
         # This is just for backward compat
